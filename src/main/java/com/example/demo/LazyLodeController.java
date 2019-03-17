@@ -59,7 +59,7 @@ public class LazyLodeController {
         // 此时的instance是否为null，取决于不可预测的时序，线程的调度方式，
         // 以及初始化对象instance的时间。这样单例模式就是失败的，会返回不同的
         // 对象。
-        //TODO:此处让线程等待一会，则在大量并发下就出现了返回多个对象的结果。并发测试使用jmeter模拟。
+        //warning:此处让线程等待一会，则在大量并发下就出现了返回多个对象的结果。并发测试使用jmeter模拟。
         long begintime = System.currentTimeMillis();
         if (instance == null) {
 
