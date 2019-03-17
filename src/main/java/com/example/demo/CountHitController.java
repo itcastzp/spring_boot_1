@@ -42,17 +42,20 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  */
 @Controller
+@NotThreadSafe
 public class CountHitController {
-
+    //atomic包下的操作，保证了操作的原子性，以及线程安全。
     private AtomicInteger safeHits = new AtomicInteger();
     private int unsafehit = 0;
 
     @Autowired
+    @NotThreadSafe
     private CountService cs;
 
 
     @RequestMapping("/hitme")
     @ResponseBody
+    @ThreadSafe
     public void hitCount(HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
         int serviceCount = cs.count();
@@ -98,6 +101,7 @@ public class CountHitController {
 
     @RequestMapping("/unsafe")
     @ResponseBody
+    @NotThreadSafe
     public void unSafeHitCount(HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
 
