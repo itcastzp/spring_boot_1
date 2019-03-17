@@ -23,11 +23,15 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 @ThreadSafe
 public class SafeCountService {
+    //当在无状态的类中添加了状态时（添加成员变量）如果该状态完全由线程安全的对象管理
+    // 那么这个类仍然是线程安全的。但是如果从一个变为多个。那就更不简单。
+    //@See CountServieExt
     @ThreadSafe
     private AtomicLong longHits = new AtomicLong();
 
+
     @ThreadSafe
-    public  long getLongHits(){
+    public long getLongHits() {
         return longHits.incrementAndGet();
     }
 
