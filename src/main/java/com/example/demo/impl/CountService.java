@@ -1,5 +1,6 @@
 package com.example.demo.impl;
 
+import com.example.demo.NotThreadSafe;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
  * limitations under the License.
  */
 @Service
+@NotThreadSafe
 public class CountService {
     private int someVarriable = 0;
 
