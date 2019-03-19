@@ -1,9 +1,13 @@
 package com.example.demo;
 
 import com.example.demo.impl.CountService;
+import com.example.demo.impl.CountServiceExt;
+import com.example.demo.impl.SafeCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +41,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>
  * @see com.example.demo.impl.CountService
  * 这个service就不是线程安全的。
- *
- *
- *
  */
 @Controller
 @NotThreadSafe
@@ -52,6 +53,34 @@ public class CountHitController {
     @NotThreadSafe
     private CountService cs;
 
+    @ThreadSafe
+    @Autowired
+    private CountServiceExt countServiceExt;
+
+    @ThreadSafe
+    @Autowired
+    private SafeCountService safeCountService;
+
+
+    @RequestMapping("/syncCount")
+    @ResponseBody
+    @ThreadSafe
+    public void getSyncCount(@RequestParam(name = "id") Integer id) {
+        Integer a = 10;
+        countServiceExt.SafeButBadService(id);
+        //countServiceExt.doUnSafeService(id);
+
+    }
+
+    @RequestMapping("/safeCount")
+    @ResponseBody
+    @ThreadSafe
+    public void getSafeCount() {
+        //countServiceExt.SafeButBadService(a);
+        safeCountService.getLongHits();
+
+    }
+
 
     @RequestMapping("/hitme")
     @ResponseBody
@@ -62,7 +91,8 @@ public class CountHitController {
         safeHits.incrementAndGet();
 
 //       加锁使unsafehit变为原子性操作。这样就不会存在线程问题
-        synchronized (this) {
+        /*synchronized (this)*/
+        synchronized (CountHitController.class) {
             unsafehit++;
         }
 
