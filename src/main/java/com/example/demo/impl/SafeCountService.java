@@ -32,7 +32,9 @@ public class SafeCountService {
 
     @ThreadSafe
     public long getLongHits() {
-        return longHits.incrementAndGet();
+        long x = longHits.incrementAndGet();
+        System.out.println(x);
+        return x;
     }
 
 }
