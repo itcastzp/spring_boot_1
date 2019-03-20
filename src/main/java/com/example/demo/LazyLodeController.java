@@ -92,7 +92,7 @@ public class LazyLodeController {
         // 以及初始化对象instance的时间。这样单例模式就是失败的，会返回不同的
         // 对象。
         if (instance == null) {
-            synchronized (this) {
+            synchronized (LazyLodeController.class) {
                 if (instance == null) {
                     try {
                         Thread.sleep(10000);
