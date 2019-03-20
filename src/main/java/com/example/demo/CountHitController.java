@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import ch.qos.logback.core.util.TimeUtil;
 import com.example.demo.impl.CountService;
 import com.example.demo.impl.CountServiceExt;
 import com.example.demo.impl.SafeCountService;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -66,9 +72,42 @@ public class CountHitController {
     @ResponseBody
     @ThreadSafe
     public void getSyncCount(@RequestParam(name = "id") Integer id) {
-        Integer a = 10;
-        countServiceExt.SafeButBadService(id);
-        //countServiceExt.doUnSafeService(id);
+        long begin = System.currentTimeMillis();
+        countServiceExt.bigNumMinusLastNumShouldEqualsOne(id);
+        long end = System.currentTimeMillis();
+        System.out.println(getCunrrentTime()+"     "+(end - begin));
+       // countServiceExt.doUnSafeService(id);
+
+    }
+
+    private static String getCunrrentTime(){
+        DateFormat df = new SimpleDateFormat("yy-MM-dd hh:mm:ss-SSS");
+        Date d = new Date();
+
+        return df.format(d).toString();
+
+
+    }
+    @RequestMapping("/FastSyncCount")
+    @ResponseBody
+    @ThreadSafe
+    public void getFastSyncCount(@RequestParam(name = "id") Integer id) {
+        long begin = System.currentTimeMillis();
+        countServiceExt.FastSafeService(id);
+        long end = System.currentTimeMillis();
+        System.out.println(getCunrrentTime()+"      "+ + (end - begin));
+        // countServiceExt.doUnSafeService(id);
+
+    }
+
+    @RequestMapping("/UnSafeService")
+    @ResponseBody
+    @NotThreadSafe
+    public void getSyncCount2(@RequestParam(name = "id") Integer id) {
+        long begin = System.currentTimeMillis();
+        countServiceExt.doUnSafeService(id);
+        long end = System.currentTimeMillis();
+        System.out.println(getCunrrentTime()+"      "+ + (end - begin));
 
     }
 
